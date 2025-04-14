@@ -1,4 +1,4 @@
-name: Deploy Roamly to GitHub Pages
+name: Deploy static HTML to GitHub Pages
 
 on:
   push:
@@ -15,22 +15,23 @@ concurrency:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+
     steps:
-      - name: 📥 Checkout Repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🔧 Setup Pages
+      - name: 📂 Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: 🧱 Upload Static Site
-        uses: actions/upload-pages-artifact@v4
+      - name: 📤 Upload static site files
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: ./
+          path: .
 
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
