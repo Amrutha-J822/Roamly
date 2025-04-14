@@ -8,10 +8,24 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Add explicit permissions to fix the error
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for proper deployment
+
+      - name: 🔍 Debug information
+        run: |
+          echo "GitHub workspace: $GITHUB_WORKSPACE"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Branch: $GITHUB_REF"
+          ls -la
 
       - name: 🌐 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -20,3 +34,6 @@ jobs:
           publish_dir: .
           user_name: Amrutha Junnuri
           user_email: amrutha.junnuri@sjsu.edu
+          keep_files: true  # Preserves files already in the gh-pages branch
+          force_orphan: true  # Creates a new orphan branch
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"
